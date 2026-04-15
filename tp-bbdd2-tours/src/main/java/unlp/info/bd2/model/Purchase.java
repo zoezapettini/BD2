@@ -23,7 +23,7 @@ public class Purchase {
     private float totalPrice;
 
     @Column(name = "DATE")
-    @UpdateTimestamp
+    @Temporal(TemporalType.TIMESTAMP)
     private Date date;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})

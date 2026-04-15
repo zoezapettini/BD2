@@ -1,8 +1,8 @@
 -------------------------------------------------------------------------------
 Test set: unlp.info.bd2.ToursApplicationTests
 -------------------------------------------------------------------------------
-Tests run: 11, Failures: 4, Errors: 1, Skipped: 0, Time elapsed: 6.330 s <<< FAILURE! -- in unlp.info.bd2.ToursApplicationTests
-unlp.info.bd2.ToursApplicationTests.createAndGetPurchaseTest -- Time elapsed: 0.075 s <<< FAILURE!
+Tests run: 11, Failures: 4, Errors: 1, Skipped: 0, Time elapsed: 5.622 s <<< FAILURE! -- in unlp.info.bd2.ToursApplicationTests
+unlp.info.bd2.ToursApplicationTests.createAndGetPurchaseTest -- Time elapsed: 0.086 s <<< FAILURE!
 org.opentest4j.AssertionFailedError: expected: not <null>
 	at org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:152)
 	at org.junit.jupiter.api.AssertionFailureBuilder.buildAndThrow(AssertionFailureBuilder.java:132)
@@ -15,7 +15,7 @@ org.opentest4j.AssertionFailedError: expected: not <null>
 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1612)
 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1612)
 
-unlp.info.bd2.ToursApplicationTests.removePurchaseAndItems -- Time elapsed: 0.033 s <<< FAILURE!
+unlp.info.bd2.ToursApplicationTests.removePurchaseAndItems -- Time elapsed: 0.035 s <<< FAILURE!
 org.opentest4j.AssertionFailedError: expected: <1> but was: <0>
 	at org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:151)
 	at org.junit.jupiter.api.AssertionFailureBuilder.buildAndThrow(AssertionFailureBuilder.java:132)
@@ -28,7 +28,7 @@ org.opentest4j.AssertionFailedError: expected: <1> but was: <0>
 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1612)
 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1612)
 
-unlp.info.bd2.ToursApplicationTests.createAndGetSupplierAndService -- Time elapsed: 0.019 s <<< ERROR!
+unlp.info.bd2.ToursApplicationTests.createAndGetSupplierAndService -- Time elapsed: 0.018 s <<< ERROR!
 java.lang.IndexOutOfBoundsException: Index 0 out of bounds for length 0
 	at java.base/jdk.internal.util.Preconditions.outOfBounds(Preconditions.java:100)
 	at java.base/jdk.internal.util.Preconditions.outOfBoundsCheckIndex(Preconditions.java:106)
@@ -41,7 +41,7 @@ java.lang.IndexOutOfBoundsException: Index 0 out of bounds for length 0
 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1612)
 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1612)
 
-unlp.info.bd2.ToursApplicationTests.updateUserTest -- Time elapsed: 0.109 s <<< FAILURE!
+unlp.info.bd2.ToursApplicationTests.updateUserTest -- Time elapsed: 0.113 s <<< FAILURE!
 org.opentest4j.AssertionFailedError: expected: <true> but was: <false>
 	at org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:151)
 	at org.junit.jupiter.api.AssertionFailureBuilder.buildAndThrow(AssertionFailureBuilder.java:132)
@@ -54,7 +54,7 @@ org.opentest4j.AssertionFailedError: expected: <true> but was: <false>
 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1612)
 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1612)
 
-unlp.info.bd2.ToursApplicationTests.deleteUserTest -- Time elapsed: 0.013 s <<< FAILURE!
+unlp.info.bd2.ToursApplicationTests.deleteUserTest -- Time elapsed: 0.016 s <<< FAILURE!
 org.opentest4j.AssertionFailedError: expected: <true> but was: <false>
 	at org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:151)
 	at org.junit.jupiter.api.AssertionFailureBuilder.buildAndThrow(AssertionFailureBuilder.java:132)
