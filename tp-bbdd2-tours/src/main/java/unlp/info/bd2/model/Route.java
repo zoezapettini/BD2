@@ -1,52 +1,25 @@
 package unlp.info.bd2.model;
 
-import jakarta.persistence.*;
-
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity
 public class Route {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "NAME", nullable = false)
     private String name;
 
-    @Column(name = "PRICE", nullable = false)
     private float price;
 
-    @Column(name = "TOTAL_KM", nullable = false)
     private float totalKm;
 
-    @Column(name = "MAX_NUMBER_USERS", nullable = false)
     private int maxNumberUsers;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinTable(
-            name = "ROUTE_STOP",
-            joinColumns = @JoinColumn(name = "route_id"),
-            inverseJoinColumns = @JoinColumn(name = "stop_id")
-    )
-    private List<Stop> stops = new ArrayList<>();
+    private List<Stop> stops;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinTable(
-            name = "ROUTE_DRIVER",
-            joinColumns = @JoinColumn(name = "route_id"),
-            inverseJoinColumns = @JoinColumn(name = "driver_id")
-    )
-    private List<DriverUser> driverList = new ArrayList<>();;
+    private List<DriverUser> driverList;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinTable(
-            name = "ROUTE_TOUR_GUIDE",
-            joinColumns = @JoinColumn(name = "route_id"),
-            inverseJoinColumns = @JoinColumn(name = "tour_guide_id")
-    )
-    private List<TourGuideUser> tourGuideList = new ArrayList<>();;
+    private List<TourGuideUser> tourGuideList;
 
     public Long getId() {
         return id;
@@ -112,11 +85,4 @@ public class Route {
         this.tourGuideList = tourGuideList;
     }
 
-    public void addDriver(DriverUser driverUser1) {
-        this.getDriverList().add(driverUser1);
-    }
-
-    public void addTourGuide(TourGuideUser tourGuideUser1) {
-        this.getTourGuideList().add(tourGuideUser1);
-    }
 }

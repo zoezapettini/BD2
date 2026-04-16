@@ -1,31 +1,16 @@
 package unlp.info.bd2.model;
 
-import jakarta.persistence.*;
-
-
-import java.util.ArrayList;
 import java.util.List;
 
-
-@Entity
 public class Supplier {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "BUSINESS_NAME")
     private String businessName;
 
-    @Column(name = "AUTHORIZATION_NUMBER", unique = true)
     private String authorizationNumber;
 
-    //preguntar
-    @OneToMany(mappedBy = "supplier",
-            cascade = {CascadeType.PERSIST, CascadeType.MERGE},
-            fetch = FetchType.LAZY)
-    private List<Service> services = new ArrayList<>();;
-
+    private List<Service> services;
 
     public Long getId() {
         return id;
@@ -57,10 +42,6 @@ public class Supplier {
 
     public void setServices(List<Service> services) {
         this.services = services;
-    }
-
-    public void addService(Service service){
-        this.services.add(service);
     }
 
 }

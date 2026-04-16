@@ -1,23 +1,16 @@
 package unlp.info.bd2.model;
 
 
-import jakarta.persistence.*;
-
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-
-@Entity
-@DiscriminatorValue("GUIDE")
 public class TourGuideUser extends User {
 
-    @Column(name ="EDUCATION")
     private String education;
 
-    @ManyToMany(mappedBy = "tourGuideList", fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    private List<Route> routes = new ArrayList<>();;
+    private List<Route> routes;
+
 
     public String getEducation() {
         return education;
@@ -33,15 +26,6 @@ public class TourGuideUser extends User {
 
     public void setRoutes(List<Route> routes) {
         this.routes = routes;
-    }
-
-    public void addRoute(Route route){
-        this.routes.add(route);
-    }
-
-    @Override
-    public boolean canBeDeleted() {
-        return this.routes.isEmpty();
     }
 
 }

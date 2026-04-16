@@ -1,64 +1,28 @@
 package unlp.info.bd2.model;
 
-import jakarta.persistence.*;
-
-import org.hibernate.annotations.UpdateTimestamp;
-
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-
-@Entity
 public class Purchase {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    Long id;
 
-    @Column(name = "CODE", nullable = false, unique = true)
     private String code;
 
-    @Column(name = "TOTAL_PRICE", nullable = false)
     private float totalPrice;
 
-    @Column(name = "DATE")
-    @Temporal(TemporalType.TIMESTAMP)
     private Date date;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(
-            name = "route_id",
-            nullable = false
-    )
     private Route route;
 
-    // por defecto es optional = true.
-    @OneToOne(fetch = FetchType.EAGER, mappedBy = "purchase", cascade = CascadeType.ALL, orphanRemoval = true)
     private Review review;
 
-    @OneToMany(mappedBy = "purchase",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true,
-            fetch = FetchType.LAZY)
-    private List<ItemService> itemServiceList = new ArrayList<>();;
+    private List<ItemService> itemServiceList;
 
-    public Purchase() {
-        this.itemServiceList = new ArrayList<>();
-    }
 
-    public Purchase(String code, Date date, Route route, User user) {
-        this();
-        this.code = code;
-        this.date = date;
-        this.route = route;
-        this.user = user;
-        this.totalPrice = route.getPrice();
-    }
+
     public Long getId() {
         return id;
     }
@@ -121,10 +85,5 @@ public class Purchase {
 
     public void setItemServiceList(List<ItemService> itemServiceList) {
         this.itemServiceList = itemServiceList;
-    }
-
-    public void addItemService(ItemService itemService) {
-        this.itemServiceList.add(itemService);
-        this.totalPrice+=itemService.getQuantity() * itemService.getService().getPrice();
     }
 }

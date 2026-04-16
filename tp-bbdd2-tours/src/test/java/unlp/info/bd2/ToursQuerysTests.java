@@ -1,6 +1,6 @@
 package unlp.info.bd2;
 
-import org.junit.jupiter.api.Assertions;
+import org.junit.Assert;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -148,12 +148,12 @@ public class ToursQuerysTests {
 
     private <T> void assertListEquality(List<T> list1, List<T> list2) {
         if (list1.size() != list2.size()) {
-            Assertions.fail("Lists have different size");
+            Assert.fail("Lists have different size");
         }
 
         for (T objectInList1 : list1) {
             if (!list2.contains(objectInList1)) {
-                Assertions.fail(objectInList1 + " is not present in list2");
+                Assert.fail(objectInList1 + " is not present in list2");
             }
         }
     }

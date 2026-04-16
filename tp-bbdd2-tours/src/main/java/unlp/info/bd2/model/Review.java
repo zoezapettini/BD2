@@ -1,24 +1,16 @@
 package unlp.info.bd2.model;
 
 
-import jakarta.persistence.*;
-
-@Entity
 public class Review {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "RATING", nullable = false)
     private int rating;
 
-    @Column(name = "COMMENT", nullable = false)
     private String comment;
 
-    @OneToOne(fetch = FetchType.EAGER, optional = false, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinColumn(name = "purchase_id", unique = true)
     private Purchase purchase;
+
 
     public Long getId() {
         return id;
