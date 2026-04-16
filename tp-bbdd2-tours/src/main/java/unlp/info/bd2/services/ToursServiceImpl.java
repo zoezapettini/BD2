@@ -23,6 +23,7 @@ public class ToursServiceImpl implements ToursService {
     private final StopRepository stopRepository;
     private final DriverUserRepository driverUserRepository;
     private final TourGuideUserRepository tourGuideUserRepository;
+    private final ItemServiceRepository itemServiceRepository;
 
     public ToursServiceImpl(
             UserRepository userRepository,
@@ -32,7 +33,8 @@ public class ToursServiceImpl implements ToursService {
             SupplierRepository supplierRepository,
             StopRepository stopRepository,
             DriverUserRepository driverUserRepository,
-            TourGuideUserRepository tourGuideUserRepository
+            TourGuideUserRepository tourGuideUserRepository,
+            ItemServiceRepository itemServiceRepository
     ) {
         this.userRepository = userRepository;
         this.routeRepository = routeRepository;
@@ -42,6 +44,7 @@ public class ToursServiceImpl implements ToursService {
         this.stopRepository = stopRepository;
         this.driverUserRepository = driverUserRepository;
         this.tourGuideUserRepository = tourGuideUserRepository;
+        this.itemServiceRepository = itemServiceRepository;
     }
 
     // a. Creación de entidades persistentes
@@ -58,6 +61,7 @@ public class ToursServiceImpl implements ToursService {
         user.setName(fullName);
         user.setEmail(email);
         user.setPhoneNumber(phoneNumber);
+        user.setActive(true);
         return userRepository.save(user);
     }
 
@@ -69,7 +73,6 @@ public class ToursServiceImpl implements ToursService {
         route.setPrice(price);
         route.setTotalKm(totalKm);
         route.setMaxNumberUsers(maxNumberOfUsers);
-
         route.setStops(stops);
 
         return routeRepository.save(route);
@@ -78,23 +81,21 @@ public class ToursServiceImpl implements ToursService {
     @Override
     @Transactional
     public Service addServiceToSupplier(String name, float price, String description, Supplier supplier) throws ToursException {
-        Optional<Service> existing = serviceRepository.findByNameAndSupplierId(name, supplier.getId());
-        if (existing.isPresent()) {
-            return existing.get();
+        Optional<Service> existingService = serviceRepository.findByNameAndSupplierId(name, supplier.getId());
+        if (existingService.isPresent()) {
+            return existingService.get();
         }
-
-        Service service = new Service();
-        service.setName(name);
-        service.setPrice(price);
-        service.setDescription(description);
-        service.setSupplier(supplier);
-
-        return serviceRepository.save(service);
+        Service service = new Service(name, price, description, supplier);
+        supplier.addService(service);
+        return this.serviceRepository.save(service);
     }
 
     @Override
     @Transactional
-    public Supplier createSupplier (String businessName, String authorizationNumber){
+    public Supplier createSupplier (String businessName, String authorizationNumber) throws ToursException {
+        if (supplierRepository.findByAuthorizationNumber(authorizationNumber).isPresent()) {
+            throw new ToursException("Constraint Violation");
+        }
         Supplier supplier = new Supplier();
         supplier.setBusinessName(businessName);
         supplier.setAuthorizationNumber(authorizationNumber);
@@ -122,20 +123,17 @@ public class ToursServiceImpl implements ToursService {
     @Override
     @Transactional
     public Purchase createPurchase(String code, Date date, Route route, User user) throws ToursException {
-        Purchase purchase = new Purchase();
-        purchase.setCode(code);
-        purchase.setDate(date);
-        purchase.setUser(user);
-        purchase.setRoute(route);
-        purchase.setTotalPrice(route.getPrice());
-        purchase.setItemServiceList(new ArrayList<>());
-
-        Purchase saved = purchaseRepository.save(purchase);
-
-        if (user.getPurchaseList() == null) user.setPurchaseList(new ArrayList<>());
-        user.getPurchaseList().add(saved);
-
-        return saved; // Retorná siempre el objeto persistido
+        try{
+            if(this.purchaseRepository.getCountOfPurchasesInRouteAndDate(route,date) < route.getMaxNumberUsers()){
+                Purchase purchase = new Purchase(code, date, route, user);
+                user.addPurchase(purchase);
+                return this.purchaseRepository.save(purchase);
+            } else{
+                throw new ToursException("No hay lugares disponibles");
+            }
+        } catch (Exception e){
+            throw new ToursException("No puede realizarse la compra");
+        }
     }
 
     @Override
@@ -231,10 +229,21 @@ public class ToursServiceImpl implements ToursService {
     @Override
     @Transactional
     public void deleteUser(User user) throws ToursException {
-        if (!userRepository.existsById(user.getId())) {
-            throw new ToursException("El usuario a eliminar no existe.");
+        User persistentUser = userRepository.findById(user.getId())
+                .orElseThrow(() -> new ToursException("El usuario a eliminar no existe."));
+        if (!persistentUser.isActive()) {
+            throw new ToursException("El usuario se encuentra desactivado");
         }
-        userRepository.delete(user);
+
+        if(!user.canBeDeleted()){
+            throw  new ToursException("El usuario no puede ser desactivado");
+        }
+        if (persistentUser.getPurchaseList() == null || persistentUser.getPurchaseList().isEmpty()) {
+            userRepository.delete(persistentUser);
+        } else {
+            persistentUser.setActive(false);
+            userRepository.save(persistentUser);
+        }
     }
 
     @Override
@@ -268,6 +277,9 @@ public class ToursServiceImpl implements ToursService {
         if (!route.getDriverList().contains(driver)) {
             route.getDriverList().add(driver);
         }
+
+        driver.addRoutes(route);
+        driverUserRepository.save(driver);
         routeRepository.save(route);
     }
 
@@ -288,8 +300,9 @@ public class ToursServiceImpl implements ToursService {
         if (!route.getTourGuideList().contains(guide)) {
             route.getTourGuideList().add(guide);
         }
+        guide.addRoute(route);
 
-        // 4. Persistimos los cambios
+        tourGuideUserRepository.save(guide);
         routeRepository.save(route);
     }
 
@@ -313,21 +326,16 @@ public class ToursServiceImpl implements ToursService {
 
     @Override
     @Transactional
+
     public ItemService addItemToPurchase(Service service, int quantity, Purchase purchase) throws ToursException {
         ItemService item = new ItemService();
-        item.setService(service);
         item.setQuantity(quantity);
         item.setPurchase(purchase);
+        item.setService(service);
+        purchase.addItemService(item);
+        service.addItemService(item);
+        return this.itemServiceRepository.save(item);
 
-        if (purchase.getItemServiceList() == null) {
-            purchase.setItemServiceList(new ArrayList<>());
-        }
-        purchase.getItemServiceList().add(item);
-
-        purchase.setTotalPrice(purchase.getTotalPrice() + (service.getPrice() * quantity));
-
-        purchaseRepository.save(purchase);
-        return item;
     }
 
     @Override

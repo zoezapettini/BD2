@@ -29,7 +29,17 @@ public class DriverUser extends User {
         return routes;
     }
 
-    public void setRouts(List<Route> routs) {
+    public void setRoutes(List<Route> routs) {
         this.routes = routs;
     }
+
+    public void addRoutes(Route route){
+        this.routes.add(route);
+    }
+
+    @Override
+    public boolean canBeDeleted() {
+        return this.routes.isEmpty();
+    }
+
 }

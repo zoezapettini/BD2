@@ -1,8 +1,10 @@
 package unlp.info.bd2.repositories;
 
 
+import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
 import unlp.info.bd2.model.Purchase;
+import unlp.info.bd2.model.Route;
 
 import java.util.Date;
 import java.util.List;
@@ -50,6 +52,16 @@ public class PurchaseRepository extends BaseRepositoryImpl<Purchase> {
                 .createQuery(hql, Purchase.class)
                 .setParameter("code", code)
                 .uniqueResultOptional();
+    }
+
+    public int getCountOfPurchasesInRouteAndDate(Route route, Date date) {
+        Session session = sessionFactory.getCurrentSession();
+        String hql = "SELECT COUNT(p) FROM Purchase p WHERE p.route = :route AND p.date = :date";
+        return session.createQuery(hql, Long.class)
+                .setParameter("route", route)
+                .setParameter("date", date)
+                .uniqueResult()
+                .intValue();
     }
 
 

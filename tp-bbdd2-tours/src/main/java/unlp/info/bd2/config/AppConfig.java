@@ -21,7 +21,8 @@ public class AppConfig {
             SupplierRepository supplierRepository,
             StopRepository stopRepository,
             DriverUserRepository driverUserRepository,
-            TourGuideUserRepository tourGuideUserRepository
+            TourGuideUserRepository tourGuideUserRepository,
+            ItemServiceRepository itemServiceRepository
     ) {
         return new ToursServiceImpl(
                 userRepository,
@@ -31,7 +32,8 @@ public class AppConfig {
                 supplierRepository,
                 stopRepository,
                 driverUserRepository,
-                tourGuideUserRepository
+                tourGuideUserRepository,
+                itemServiceRepository
         );
     }
 }

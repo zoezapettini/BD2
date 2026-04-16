@@ -77,4 +77,18 @@ public class Service {
     public void setSupplier(Supplier supplier) {
         this.supplier = supplier;
     }
+
+
+    public void addItemService(ItemService itemService) {
+        this.itemServiceList.add(itemService);
+    }
+    public Service() {
+    }
+
+    public Service(String name, float price, String description, Supplier supplier){
+        this.name = name;
+        this.price = price;
+        this.description = description;
+        this.supplier = supplier;
+    }
 }

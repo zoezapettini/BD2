@@ -47,6 +47,18 @@ public class Purchase {
             fetch = FetchType.LAZY)
     private List<ItemService> itemServiceList = new ArrayList<>();;
 
+    public Purchase() {
+        this.itemServiceList = new ArrayList<>();
+    }
+
+    public Purchase(String code, Date date, Route route, User user) {
+        this();
+        this.code = code;
+        this.date = date;
+        this.route = route;
+        this.user = user;
+        this.totalPrice = route.getPrice();
+    }
     public Long getId() {
         return id;
     }
@@ -109,5 +121,10 @@ public class Purchase {
 
     public void setItemServiceList(List<ItemService> itemServiceList) {
         this.itemServiceList = itemServiceList;
+    }
+
+    public void addItemService(ItemService itemService) {
+        this.itemServiceList.add(itemService);
+        this.totalPrice+=itemService.getQuantity() * itemService.getService().getPrice();
     }
 }

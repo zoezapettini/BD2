@@ -14,10 +14,10 @@ public class Supplier {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "BUSINESS_NAME", unique = true)
+    @Column(name = "BUSINESS_NAME")
     private String businessName;
 
-    @Column(name = "AUTHORIZATION_NUMBER")
+    @Column(name = "AUTHORIZATION_NUMBER", unique = true)
     private String authorizationNumber;
 
     //preguntar
@@ -57,6 +57,10 @@ public class Supplier {
 
     public void setServices(List<Service> services) {
         this.services = services;
+    }
+
+    public void addService(Service service){
+        this.services.add(service);
     }
 
 }
