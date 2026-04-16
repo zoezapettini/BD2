@@ -12,32 +12,32 @@ import java.util.List;
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "user_type", discriminatorType = DiscriminatorType.STRING)
 @DiscriminatorValue("USER")
-
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "USERNAME", unique = true)
+    @Column(nullable = false, unique = true, length = 50,updatable = false)
     private String username;
 
-    @Column(name = "PASSWORD")
+    @Column(name = "PASSWORD", nullable = false)
     private String password;
 
     @Column(name = "NAME")
     private String name;
 
-    @Column(name = "EMAIL")
+    @Column(name = "EMAIL", nullable = false, unique = true)
     private String email;
 
     @Column(name = "BIRTHDATE")
+    @Temporal(TemporalType.DATE)
     private Date birthdate;
 
     @Column(name = "PHONE_NUMBER")
     private String phoneNumber;
 
-    @Column(name = "ACTIVE")
+    @Column(name = "ACTIVE", nullable = false)
     private boolean active;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})

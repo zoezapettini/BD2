@@ -219,14 +219,13 @@ public class ToursServiceImpl implements ToursService {
         return userRepository.findByUsername(username);
     }
 
-    @Override
     @Transactional
+    @Override
     public User updateUser(User user) throws ToursException {
-        // Verificamos existencia antes de actualizar
         if (!userRepository.existsById(user.getId())) {
-            throw new ToursException(String.format("No se puede actualizar: No existe el usuario con id: %d", user.getId()));
+            throw new ToursException("El usuario a eliminar no existe.");
         }
-        return userRepository.save(user);
+        return this.userRepository.update(user);
     }
 
     @Override

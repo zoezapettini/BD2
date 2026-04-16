@@ -18,7 +18,7 @@ public class Route {
     @Column(name = "PRICE", nullable = false)
     private float price;
 
-    @Column(name = "TOTAL_KM")
+    @Column(name = "TOTAL_KM", nullable = false)
     private float totalKm;
 
     @Column(name = "MAX_NUMBER_USERS", nullable = false)

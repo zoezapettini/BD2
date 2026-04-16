@@ -39,4 +39,8 @@ public class UserRepository extends BaseRepositoryImpl<User> {
 
         return count != null && count > 0;
     }
+
+    public void flush() {
+        getCurrentSession().flush();
+    }
 }

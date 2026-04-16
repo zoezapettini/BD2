@@ -39,4 +39,9 @@ public abstract class BaseRepositoryImpl <T> implements BaseRepository<T> {
         getCurrentSession().delete(entity);
         return entity;
     }
+
+    public T update(T entity) {
+        getCurrentSession().update(entity);
+        return entity;
+    }
 }

@@ -10,7 +10,7 @@ public class Stop {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "NAME")
+    @Column(name = "NAME", nullable = false)
     private String name;
 
     @Column(name = "DESCRIPTION")

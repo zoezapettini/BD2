@@ -16,7 +16,7 @@ public class Purchase {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "CODE", nullable = false)
+    @Column(name = "CODE", nullable = false, unique = true)
     private String code;
 
     @Column(name = "TOTAL_PRICE", nullable = false)
