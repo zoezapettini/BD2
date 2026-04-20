@@ -24,6 +24,7 @@ public class ToursServiceImpl implements ToursService {
     private final DriverUserRepository driverUserRepository;
     private final TourGuideUserRepository tourGuideUserRepository;
     private final ItemServiceRepository itemServiceRepository;
+    private final ReviewRepository reviewRepository;
 
     public ToursServiceImpl(
             UserRepository userRepository,
@@ -34,8 +35,8 @@ public class ToursServiceImpl implements ToursService {
             StopRepository stopRepository,
             DriverUserRepository driverUserRepository,
             TourGuideUserRepository tourGuideUserRepository,
-            ItemServiceRepository itemServiceRepository
-    ) {
+            ItemServiceRepository itemServiceRepository,
+            ReviewRepository reviewRepository) {
         this.userRepository = userRepository;
         this.routeRepository = routeRepository;
         this.serviceRepository = serviceRepository;
@@ -45,9 +46,9 @@ public class ToursServiceImpl implements ToursService {
         this.driverUserRepository = driverUserRepository;
         this.tourGuideUserRepository = tourGuideUserRepository;
         this.itemServiceRepository = itemServiceRepository;
+        this.reviewRepository = reviewRepository;
     }
 
-    // a. Creación de entidades persistentes
     @Override
     @Transactional
     public User createUser(String username, String password, String fullName, String email, Date birthdate, String phoneNumber) throws ToursException {
@@ -74,7 +75,6 @@ public class ToursServiceImpl implements ToursService {
         route.setTotalKm(totalKm);
         route.setMaxNumberUsers(maxNumberOfUsers);
         route.setStops(stops);
-
         return routeRepository.save(route);
     }
 
@@ -108,7 +108,6 @@ public class ToursServiceImpl implements ToursService {
     public Service updateServicePriceById(Long id, float newPrice) throws ToursException {
         Service service = serviceRepository.findById(id)
                 .orElseThrow(() -> new ToursException("No existe el servicio con el ID proporcionado"));
-
         service.setPrice(newPrice);
         return serviceRepository.save(service);
     }
@@ -117,7 +116,6 @@ public class ToursServiceImpl implements ToursService {
     @Override
     @Transactional
     public Purchase createPurchase(String code, Route route, User user) throws ToursException {
-        // Usamos la fecha actual por defecto
         return this.createPurchase(code, new Date(), route, user);
     }
     @Override
@@ -152,16 +150,12 @@ public class ToursServiceImpl implements ToursService {
         if (purchase.getReview() != null) {
             throw new ToursException("La compra ya tiene una reseña asociada.");
         }
-
         Review review = new Review();
         review.setRating(rating);
         review.setComment(comment);
         review.setPurchase(purchase);
-
         purchase.setReview(review);
-
-        purchaseRepository.save(purchase);
-
+        reviewRepository.save(review);
         return review;
     }
 
@@ -223,7 +217,7 @@ public class ToursServiceImpl implements ToursService {
         if (!userRepository.existsById(user.getId())) {
             throw new ToursException("El usuario a eliminar no existe.");
         }
-        return this.userRepository.update(user);
+        return this.userRepository.save(user);
     }
 
     @Override
@@ -279,7 +273,6 @@ public class ToursServiceImpl implements ToursService {
         }
 
         driver.addRoutes(route);
-        driverUserRepository.save(driver);
         routeRepository.save(route);
     }
 
@@ -302,7 +295,6 @@ public class ToursServiceImpl implements ToursService {
         }
         guide.addRoute(route);
 
-        tourGuideUserRepository.save(guide);
         routeRepository.save(route);
     }
 
@@ -326,7 +318,6 @@ public class ToursServiceImpl implements ToursService {
 
     @Override
     @Transactional
-
     public ItemService addItemToPurchase(Service service, int quantity, Purchase purchase) throws ToursException {
         ItemService item = new ItemService();
         item.setQuantity(quantity);
@@ -335,7 +326,6 @@ public class ToursServiceImpl implements ToursService {
         purchase.addItemService(item);
         service.addItemService(item);
         return this.itemServiceRepository.save(item);
-
     }
 
     @Override

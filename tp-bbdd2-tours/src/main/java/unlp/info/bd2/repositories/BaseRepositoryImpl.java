@@ -12,7 +12,7 @@ public abstract class BaseRepositoryImpl <T> implements BaseRepository<T> {
     @Autowired
     protected SessionFactory sessionFactory;
 
-    private Class<T> entityClass;
+    private final Class<T> entityClass;
 
     public BaseRepositoryImpl(Class<T> entityClass) {
         this.entityClass = entityClass;
@@ -23,7 +23,7 @@ public abstract class BaseRepositoryImpl <T> implements BaseRepository<T> {
     }
 
     public T save(T entity) {
-        getCurrentSession().saveOrUpdate(entity);
+        getCurrentSession().persist(entity);
         return entity;
     }
 
@@ -36,12 +36,8 @@ public abstract class BaseRepositoryImpl <T> implements BaseRepository<T> {
     }
 
     public T delete(T entity) {
-        getCurrentSession().delete(entity);
+        getCurrentSession().remove(entity);
         return entity;
     }
 
-    public T update(T entity) {
-        getCurrentSession().update(entity);
-        return entity;
-    }
 }
